@@ -32,19 +32,25 @@ namespace MealPlanner.Model
         /// <param name="recipeFiles">Array of file paths</param>
         public void LoadRecipeFiles(string[] recipeFiles)
         {
+            recipeBook.Clear();
             foreach (string file in recipeFiles)
             {
                 string[] recipe = System.IO.File.ReadAllLines(file);
                 string[] RecipeTitle = recipe[0].Split(' ');
                 double successRate = double.Parse(RecipeTitle[1], CultureInfo.InvariantCulture);
-                
+                Dictionary<IIngredient,int> ingredientsNeededDict = new Dictionary<IIngredient, int>();
                 for (int i = 1; i < recipe.Length; i++)
                 {
                     string[] ingredient = recipe[i].Split(" ");
                     string ingName = ingredient[0];
                     int quantity = int.Parse(ingredient[1]);
+                    IIngredient ing = pantry.GetIngredient(ingName);
+                    if (ing == null)
+                        ing = new Ingredient(ingName, "Unknown");
+                    ingredientsNeededDict[ing] = quantity;
                 }
-
+                IReadOnlyDictionary<IIngredient, int> ingredientsNeeded = new Dictionary<IIngredient, int>(ingredientsNeededDict);
+                recipeBook.Add(new Recipe(RecipeTitle[0], ingredientsNeeded, successRate));
             }
         }
 
