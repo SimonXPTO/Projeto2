@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 
 namespace MealPlanner.Model
@@ -31,37 +32,19 @@ namespace MealPlanner.Model
         /// <param name="recipeFiles">Array of file paths</param>
         public void LoadRecipeFiles(string[] recipeFiles)
         {
-        
             foreach (string file in recipeFiles)
             {
-                try
+                string[] recipe = System.IO.File.ReadAllLines(file);
+                string[] RecipeTitle = recipe[0].Split(' ');
+                double successRate = double.Parse(RecipeTitle[1], CultureInfo.InvariantCulture);
+                
+                for (int i = 1; i < recipe.Length; i++)
                 {
-                    string[] lines = System.IO.File.ReadAllLines(file);
-                    if (lines.Length < 3)
-                        continue;
-                    string name = lines[0].Trim();
-                    if (!double.TryParse(lines[1], out double successRate))
-                        continue;
-                    var ingredientsNeeded = new Dictionary<IIngredient, int>();
-                    for (int i = 2; i < lines.Length; i++)
-                    {
-                        if (string.IsNullOrWhiteSpace(lines[i]))
-                            continue;
-                        string[] parts = lines[i].Split(' ');
-                        if (parts.Length != 2)
-                            continue;
-                        string ingredientName = parts[0].Trim();
-                        if (!int.TryParse(parts[1], out int quantity))
-                            continue;
-                        IIngredient ingredient = pantry.GetIngredient(ingredientName);
-                        if (ingredient == null)
-                            ingredient = new Ingredient(ingredientName, "Unknown");
-                        ingredientsNeeded[ingredient] = quantity;
-                    }
-                    IRecipe recipe = new Recipe(name, ingredientsNeeded, successRate);
-                    recipeBook.Add(recipe);
+                    string[] ingredient = recipe[i].Split(" ");
+                    string ingName = ingredient[0];
+                    int quantity = int.Parse(ingredient[1]);
                 }
-                catch {  }
+
             }
         }
 
