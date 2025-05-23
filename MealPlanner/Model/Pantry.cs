@@ -105,21 +105,15 @@ namespace MealPlanner.Model
             string[] lines = System.IO.File.ReadAllLines(file);
             foreach (string line in lines)
             {
-                string[] parts = line.Split(',');
-                if (parts.Length == 2)
+                string[] parts = line.Split(' ');
+                if (parts.Length == 3)
                 {
                     string name = parts[0].Trim();
                     string type = parts[1].Trim();
+                    if (!int.TryParse(parts[2], out int quantity))
+                        continue;
                     IIngredient ingredient = new Ingredient(name, type);
-                    if (ingredients.ContainsKey(ingredient))
-                    {
-                        ingredients[ingredient] += 1;
-                    }
-                    else
-                    {
-                        ingredients.Add(ingredient, 1);
-                    }
-            
+                    AddIngredient(ingredient, quantity);
                 }
             }
         }
