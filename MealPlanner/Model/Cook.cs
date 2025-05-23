@@ -32,7 +32,6 @@ namespace MealPlanner.Model
         /// <param name="recipeFiles">Array of file paths</param>
         public void LoadRecipeFiles(string[] recipeFiles)
         {
-            recipeBook.Clear();
             foreach (string file in recipeFiles)
             {
                 string[] recipe = System.IO.File.ReadAllLines(file);
