@@ -1,0 +1,4 @@
+Omelette 0.6
+Eggs 2
+Butter 1
+Salt 1

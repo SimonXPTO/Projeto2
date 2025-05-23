@@ -1,0 +1,4 @@
+Eggs Protein 3
+Butter Dairy 2
+Salt Spice 1
+Bread Grain 2
